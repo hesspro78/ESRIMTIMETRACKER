@@ -81,10 +81,10 @@ const ClockingInterface = ({ onAdminAccess }) => {
         variant="ghost"
         size="sm"
         onClick={onAdminAccess}
-        className="fixed bottom-6 right-6 z-50 opacity-30 hover:opacity-100 transition-all duration-300 text-white/50 hover:text-white p-3 hover:bg-white/20 rounded-xl shadow-lg backdrop-blur-sm"
-        title="Accès Administration"
+        className="fixed bottom-6 right-6 z-50 opacity-40 hover:opacity-100 transition-all duration-300 text-white/60 hover:text-white p-3 hover:bg-white/20 rounded-xl shadow-lg backdrop-blur-sm border border-white/10 hover:border-white/30"
+        title="Accès Administration (ou tapez 'admin')"
       >
-        <Settings className="h-5 w-5" />
+        <Settings className="h-5 w-5 animate-pulse" />
       </Button>
 
       <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
