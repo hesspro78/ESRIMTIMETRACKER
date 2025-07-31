@@ -73,7 +73,9 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
       setStatus('error');
       setMessage(error.message || "Une erreur est survenue.");
       setMessageStyle('text-red-500 font-semibold');
-      setTimeout(resetScanner, 2000);
+      setTimeout(() => {
+        resetScanner();
+      }, 2000);
     }
   }, [resetScanner, onScanSuccess]);
 
