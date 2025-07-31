@@ -110,13 +110,17 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
     };
 
     const startScanner = async () => {
+      console.log("startScanner called", { status, scannerRef: !!scannerRef.current, mounted });
+
       if (status === 'scanning' && !scannerRef.current && mounted) {
         // Attendre que l'élément DOM soit prêt
         await new Promise(resolve => setTimeout(resolve, 200));
 
         const readerElement = document.getElementById('qr-reader');
+        console.log("QR reader element:", readerElement);
+
         if (!readerElement || !mounted) {
-          console.warn("Element not ready or component unmounted");
+          console.warn("Element not ready or component unmounted", { readerElement: !!readerElement, mounted });
           return;
         }
 
@@ -185,9 +189,9 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
             let errorMsg = "Impossible d'activer la caméra.";
 
             if (err.name === 'NotAllowedError') {
-              errorMsg = "Accès à la caméra refusé. Autorisez l'accès et rechargez.";
+              errorMsg = "Accès à la caméra refus��. Autorisez l'accès et rechargez.";
             } else if (err.name === 'NotFoundError') {
-              errorMsg = "Aucune caméra détect��e sur cet appareil.";
+              errorMsg = "Aucune caméra détectée sur cet appareil.";
             } else if (err.name === 'NotSupportedError') {
               errorMsg = "Caméra non supportée par ce navigateur.";
             }
