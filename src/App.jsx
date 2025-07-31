@@ -69,7 +69,7 @@ const MainApp = () => {
     }
 
     // Si utilisateur connecté mais pas admin, retour au dashboard
-    return <Dashboard onBackToClocking={() => setView('clocking')} />;
+    return <Dashboard onBackToClocking={() => setView('main')} />;
   }
 
   // Vue QR Scanner pour login (ancienne fonctionnalité)
