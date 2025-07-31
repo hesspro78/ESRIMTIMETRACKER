@@ -188,13 +188,13 @@ const ClockingInterface = ({ onAdminAccess }) => {
                     <Clock className="h-6 w-6 text-cyan-400" />
                     <div>
                       <p className="text-lg font-semibold">
-                        {new Date().toLocaleTimeString('fr-FR')}
+                        {currentTime.toLocaleTimeString('fr-FR')}
                       </p>
                       <p className="text-sm text-gray-300">
-                        {new Date().toLocaleDateString('fr-FR', { 
-                          weekday: 'long', 
-                          day: 'numeric', 
-                          month: 'long' 
+                        {currentTime.toLocaleDateString('fr-FR', {
+                          weekday: 'long',
+                          day: 'numeric',
+                          month: 'long'
                         })}
                       </p>
                     </div>
