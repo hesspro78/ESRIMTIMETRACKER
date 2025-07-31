@@ -72,6 +72,7 @@ const Dashboard = ({ onBackToClocking }) => {
         notifications={notifications}
         markAllNotificationsAsRead={markAllAsRead}
         onLogout={handleLogout}
+        onBackToClocking={onBackToClocking}
       />
 
       <DashboardStatsCards
