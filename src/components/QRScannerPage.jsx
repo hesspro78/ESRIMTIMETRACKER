@@ -63,7 +63,9 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
           onScanSuccess(data.user || { userName: 'Utilisateur' }, data.action);
         }, 1500);
       } else {
-        setTimeout(resetScanner, 2000);
+        setTimeout(() => {
+          resetScanner();
+        }, 2000);
       }
 
     } catch (error) {
