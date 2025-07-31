@@ -256,22 +256,39 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
                 <Loader2 className="h-16 w-16 animate-spin text-primary" />
               </motion.div>
             )}
-            {(status === 'success' || status === 'error') && (
+            {status === 'success' && (
               <motion.div
-                key="result"
+                key="success"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 className="text-center"
               >
-                {status === 'success' ? (
-                  <>
-                    <CheckCircle className="h-24 w-24 text-green-500 mx-auto mb-4" />
-                    {actionType === 'in' ? <LogIn className="h-12 w-12 mx-auto text-green-400" /> : <LogOut className="h-12 w-12 mx-auto text-red-400" />}
-                  </>
-                ) : (
-                  <X className="h-24 w-24 text-red-500 mx-auto mb-4" />
-                )}
+                <CheckCircle className="h-24 w-24 text-green-500 mx-auto mb-4" />
+                {actionType === 'in' ? <LogIn className="h-12 w-12 mx-auto text-green-400" /> : <LogOut className="h-12 w-12 mx-auto text-red-400" />}
+              </motion.div>
+            )}
+            {status === 'error' && (
+              <motion.div
+                key="error"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5 }}
+                className="text-center"
+              >
+                <X className="h-24 w-24 text-red-500 mx-auto mb-4" />
+                <Button
+                  onClick={() => {
+                    setStatus('scanning');
+                    setMessage('Veuillez scanner votre QR Code');
+                    setMessageStyle('text-muted-foreground');
+                  }}
+                  variant="outline"
+                  className="mt-4 bg-white/10 border-white/30 text-white hover:bg-white/20"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Réessayer
+                </Button>
               </motion.div>
             )}
           </AnimatePresence>
