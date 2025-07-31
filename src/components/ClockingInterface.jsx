@@ -10,6 +10,7 @@ const ClockingInterface = ({ onAdminAccess }) => {
   const [view, setView] = useState('main'); // 'main' or 'scanner'
   const [confirmation, setConfirmation] = useState(null);
   const [adminKeySequence, setAdminKeySequence] = useState('');
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Gestion des raccourcis clavier pour l'accès admin
   useEffect(() => {
