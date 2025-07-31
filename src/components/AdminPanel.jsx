@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Download, Settings as SettingsIconLucide, User, LogOut, Palette } from 'lucide-react';
+import { Download, Settings as SettingsIconLucide, User, LogOut, Palette, ArrowLeft } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { useAppSettings } from '@/contexts/AppSettingsContext';
 import { useAuth } from '@/hooks/useAuth.jsx';
