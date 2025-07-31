@@ -110,9 +110,17 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
     };
   }, [status, handleScanVerification]);
 
+  const handleBack = () => {
+    if (onBackToMain) {
+      onBackToMain();
+    } else if (onBackToLogin) {
+      onBackToLogin();
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-900 text-white relative">
-      <Button onClick={onBackToLogin} variant="ghost" className="absolute top-4 left-4">
+      <Button onClick={handleBack} variant="ghost" className="absolute top-4 left-4">
         <ArrowLeft className="mr-2" /> Retour
       </Button>
       <motion.div
