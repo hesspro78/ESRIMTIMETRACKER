@@ -92,6 +92,12 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
 
     const startScanner = async () => {
       if (status === 'scanning' && !scannerRef.current) {
+        const readerElement = document.getElementById('qr-reader');
+        if (!readerElement) {
+          console.warn("QR reader element not found");
+          return;
+        }
+
         try {
           html5Qrcode = new Html5Qrcode('qr-reader');
           scannerRef.current = html5Qrcode;
