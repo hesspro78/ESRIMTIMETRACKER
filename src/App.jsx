@@ -14,7 +14,7 @@ const MainApp = () => {
   const { session, loading: authLoading, userProfile } = useAuth();
   const { appName, appLogo, loadInitialSettings, loadingSettings } = useAppSettings();
   const { applyCurrentTheme } = useTheme();
-  const [view, setView] = useState('clocking'); // 'clocking', 'admin', 'qr'
+  const [view, setView] = useState('main'); // 'main', 'clocking', 'admin', 'qr'
 
   useEffect(() => {
     document.title = appName;
@@ -50,7 +50,7 @@ const MainApp = () => {
   }
 
   // Interface principale de pointage - accessible sans authentification
-  if (view === 'clocking') {
+  if (view === 'main' || view === 'clocking') {
     return (
       <ClockingInterface
         onAdminAccess={() => setView('admin')}
@@ -77,7 +77,12 @@ const MainApp = () => {
     return <QRScannerPage onBackToLogin={() => setView('admin')} />;
   }
 
-  return <ClockingInterface onAdminAccess={() => setView('admin')} />;
+  // Vue par défaut
+  return (
+    <ClockingInterface
+      onAdminAccess={() => setView('admin')}
+    />
+  );
 };
 
 const AppContent = () => {
