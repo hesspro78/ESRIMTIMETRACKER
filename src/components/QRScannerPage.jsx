@@ -83,24 +83,47 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
     let html5Qrcode;
     let mounted = true;
 
+    const checkCameraPermissions = async () => {
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" }
+          });
+          // Fermer immédiatement le stream de test
+          stream.getTracks().forEach(track => track.stop());
+          return true;
+        }
+        return false;
+      } catch (err) {
+        console.warn("Permissions check failed:", err);
+        return false;
+      }
+    };
+
     const startScanner = async () => {
       if (status === 'scanning' && !scannerRef.current && mounted) {
         // Attendre que l'élément DOM soit prêt
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 200));
 
         const readerElement = document.getElementById('qr-reader');
         if (!readerElement || !mounted) {
+          console.warn("Element not ready or component unmounted");
           return;
         }
 
+        // Vérifier les permissions avant d'initialiser
+        const hasPermissions = await checkCameraPermissions();
+        if (!hasPermissions && mounted) {
+          setStatus('error');
+          setMessage("Accès à la caméra refusé. Veuillez autoriser l'accès dans votre navigateur.");
+          setMessageStyle('text-red-500 font-semibold');
+          return;
+        }
+
+        if (!mounted) return;
+
         try {
           html5Qrcode = new Html5Qrcode('qr-reader');
-
-          // Vérifier si le composant est toujours monté
-          if (!mounted) {
-            return;
-          }
-
           scannerRef.current = html5Qrcode;
 
           const onScanSuccess = (decodedText) => {
@@ -109,58 +132,84 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
             }
           };
 
-          const config = {
-            fps: 10, // Réduire la fréquence pour plus de stabilité
-            qrbox: { width: 280, height: 280 },
-            rememberLastUsedCamera: false, // Désactiver pour éviter les conflits
-            supportedScanTypes: [0],
-            aspectRatio: 1.0
+          // Configuration simplifiée et robuste
+          const cameraConfig = { facingMode: "environment" };
+          const scannerConfig = {
+            fps: 5, // FPS très bas pour éviter la surcharge
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0,
+            disableFlip: false
           };
 
           await html5Qrcode.start(
-            { facingMode: "environment" },
-            config,
+            cameraConfig,
+            scannerConfig,
             onScanSuccess,
-            (errorMessage) => {}
+            (errorMessage) => {
+              // Ignorer les erreurs de scan mineures
+            }
           );
+
+          console.log("Scanner started successfully");
+
         } catch (err) {
-          console.error("Unable to start scanner", err);
+          console.error("Scanner initialization failed:", err);
           if (mounted) {
             setStatus('error');
-            setMessage("Impossible d'activer la caméra.");
-            toast({
-              title: "Erreur de caméra",
-              description: "Vérifiez que vous avez autorisé l'accès à la caméra.",
-              variant: "destructive"
-            });
+            let errorMsg = "Impossible d'activer la caméra.";
+
+            if (err.name === 'NotAllowedError') {
+              errorMsg = "Accès à la caméra refusé. Autorisez l'accès et rechargez.";
+            } else if (err.name === 'NotFoundError') {
+              errorMsg = "Aucune caméra détectée sur cet appareil.";
+            } else if (err.name === 'NotSupportedError') {
+              errorMsg = "Caméra non supportée par ce navigateur.";
+            }
+
+            setMessage(errorMsg);
+            setMessageStyle('text-red-500 font-semibold');
           }
-          scannerRef.current = null;
+
+          if (scannerRef.current) {
+            try {
+              await scannerRef.current.clear();
+            } catch (clearErr) {
+              // Ignorer
+            }
+            scannerRef.current = null;
+          }
         }
       }
     };
 
-    startScanner();
+    // Démarrer avec un délai pour s'assurer que le DOM est prêt
+    const timeoutId = setTimeout(startScanner, 100);
 
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
 
-      const stopScanner = async () => {
+      const cleanup = async () => {
         if (scannerRef.current) {
           try {
-            const state = scannerRef.current.getState();
-            if (state === 2) { // SCANNING state
+            if (scannerRef.current.getState && scannerRef.current.getState() === 2) {
               await scannerRef.current.stop();
             }
+          } catch (err) {
+            // Ignorer les erreurs d'arrêt
+          }
+
+          try {
             await scannerRef.current.clear();
           } catch (err) {
             // Ignorer les erreurs de nettoyage
-          } finally {
-            scannerRef.current = null;
           }
+
+          scannerRef.current = null;
         }
       };
 
-      stopScanner();
+      cleanup();
     };
   }, [status]);
 
