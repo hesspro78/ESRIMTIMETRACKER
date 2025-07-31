@@ -12,7 +12,7 @@ import QuickActionsCard from '@/components/dashboard/QuickActionsCard';
 import WeeklyHoursChartCard from '@/components/dashboard/WeeklyHoursChartCard';
 import RecentActivityCard from '@/components/dashboard/RecentActivityCard';
 
-const Dashboard = () => {
+const Dashboard = ({ onBackToClocking }) => {
   const { session, userProfile, logout } = useAuth();
   const { 
     currentStatus, 
