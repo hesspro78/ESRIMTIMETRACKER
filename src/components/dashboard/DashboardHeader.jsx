@@ -109,6 +109,15 @@ const DashboardHeader = ({
               <span>Paramètres</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/10"/>
+            {onBackToClocking && (
+              <>
+                <DropdownMenuItem onClick={onBackToClocking} className="text-blue-400 focus:bg-blue-400/20 focus:text-blue-300">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  <span>Retour au Pointage</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-white/10"/>
+              </>
+            )}
             <DropdownMenuItem onClick={handleLogoutClick} className="text-red-400 focus:bg-red-400/20 focus:text-red-300">
               <LogOut className="mr-2 h-4 w-4" />
               <span>Déconnexion</span>
