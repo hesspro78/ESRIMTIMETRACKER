@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Bell, User, Settings as SettingsIconLucide, LogOut } from 'lucide-react';
+import { Bell, User, Settings as SettingsIconLucide, LogOut, ArrowLeft } from 'lucide-react';
 
 
 const DashboardHeader = ({
