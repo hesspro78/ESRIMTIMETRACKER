@@ -31,7 +31,7 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
       const { data, error } = await supabase.functions.invoke('record-time-entry', {
         body: { userId },
       });
-      
+
       if (error) {
         throw new Error(`Erreur de fonction Edge : ${error.message}`);
       }
@@ -39,9 +39,10 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
       if (data.error) {
         throw new Error(data.error);
       }
-      
+
       setActionType(data.action);
-      
+      setUserInfo(data.user || { userName: 'Utilisateur' });
+
       if (data.action === 'in') {
         setMessage("Pointage d'entrée enregistré avec succès");
         setMessageStyle('text-green-500 font-semibold');
@@ -53,7 +54,15 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
       }
 
       setStatus('success');
-      setTimeout(resetScanner, 2000);
+
+      // Appeler onScanSuccess si fourni (pour la nouvelle interface)
+      if (onScanSuccess) {
+        setTimeout(() => {
+          onScanSuccess(data.user || { userName: 'Utilisateur' }, data.action);
+        }, 1500);
+      } else {
+        setTimeout(resetScanner, 2000);
+      }
 
     } catch (error) {
       console.error("Verification failed:", error);
@@ -62,7 +71,7 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
       setMessageStyle('text-red-500 font-semibold');
       setTimeout(resetScanner, 2000);
     }
-  }, [resetScanner]);
+  }, [resetScanner, onScanSuccess]);
 
   useEffect(() => {
     let html5Qrcode;
