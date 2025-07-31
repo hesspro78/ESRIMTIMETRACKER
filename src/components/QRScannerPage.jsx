@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Html5Qrcode } from 'html5-qrcode';
 import { supabase } from '@/lib/supabaseClient';
 import { Button } from '@/components/ui/button';
-import { QrCode, X, CheckCircle, LogIn, LogOut, ArrowLeft, Loader2 } from 'lucide-react';
+import { QrCode, X, CheckCircle, LogIn, LogOut, ArrowLeft, Loader2, RefreshCw } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { playClockInSound, playClockOutSound } from '@/lib/audioUtils';
 
