@@ -16,7 +16,8 @@ const DashboardHeader = ({
   unreadNotificationsCount,
   notifications,
   markAllNotificationsAsRead,
-  onLogout // Ce prop est toujours là, mais le toast est géré par useAuth
+  onLogout, // Ce prop est toujours là, mais le toast est géré par useAuth
+  onBackToClocking
 }) => {
 
   const handleLogoutClick = () => {
