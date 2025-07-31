@@ -14,7 +14,7 @@ const MainApp = () => {
   const { session, loading: authLoading, userProfile } = useAuth();
   const { appName, appLogo, loadInitialSettings, loadingSettings } = useAppSettings();
   const { applyCurrentTheme } = useTheme();
-  const [view, setView] = useState('login');
+  const [view, setView] = useState('clocking'); // 'clocking', 'admin', 'qr'
 
   useEffect(() => {
     document.title = appName;
