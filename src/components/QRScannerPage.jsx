@@ -89,40 +89,59 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
 
   useEffect(() => {
     let html5Qrcode;
+    let mounted = true;
 
     const startScanner = async () => {
-      if (status === 'scanning' && !scannerRef.current) {
+      if (status === 'scanning' && !scannerRef.current && mounted) {
+        // Attendre que l'élément DOM soit prêt
+        await new Promise(resolve => setTimeout(resolve, 100));
+
         const readerElement = document.getElementById('qr-reader');
-        if (!readerElement) {
-          console.warn("QR reader element not found");
+        if (!readerElement || !mounted) {
           return;
         }
 
         try {
           html5Qrcode = new Html5Qrcode('qr-reader');
+
+          // Vérifier si le composant est toujours monté
+          if (!mounted) {
+            return;
+          }
+
           scannerRef.current = html5Qrcode;
 
           const onScanSuccess = (decodedText) => {
-            if (status === 'scanning' && scannerRef.current) {
+            if (mounted && status === 'scanning' && scannerRef.current) {
               handleScanVerification(decodedText);
             }
           };
 
+          const config = {
+            fps: 10, // Réduire la fréquence pour plus de stabilité
+            qrbox: { width: 280, height: 280 },
+            rememberLastUsedCamera: false, // Désactiver pour éviter les conflits
+            supportedScanTypes: [0],
+            aspectRatio: 1.0
+          };
+
           await html5Qrcode.start(
             { facingMode: "environment" },
-            { fps: 25, qrbox: { width: 250, height: 250 }, rememberLastUsedCamera: true, supportedScanTypes: [0] },
+            config,
             onScanSuccess,
             (errorMessage) => {}
           );
         } catch (err) {
           console.error("Unable to start scanner", err);
-          setStatus('error');
-          setMessage("Impossible d'activer la caméra.");
-          toast({
-            title: "Erreur de caméra",
-            description: "Vérifiez que vous avez autorisé l'accès à la caméra.",
-            variant: "destructive"
-          });
+          if (mounted) {
+            setStatus('error');
+            setMessage("Impossible d'activer la caméra.");
+            toast({
+              title: "Erreur de caméra",
+              description: "Vérifiez que vous avez autorisé l'accès à la caméra.",
+              variant: "destructive"
+            });
+          }
           scannerRef.current = null;
         }
       }
@@ -131,20 +150,19 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
     startScanner();
 
     return () => {
+      mounted = false;
+
       const stopScanner = async () => {
         if (scannerRef.current) {
           try {
-            if (scannerRef.current.getState() === 2) { // State 2 means scanning
+            const state = scannerRef.current.getState();
+            if (state === 2) { // SCANNING state
               await scannerRef.current.stop();
             }
+            await scannerRef.current.clear();
           } catch (err) {
-            console.warn("Scanner cleanup warning:", err.message);
+            // Ignorer les erreurs de nettoyage
           } finally {
-            try {
-              scannerRef.current.clear();
-            } catch (err) {
-              console.warn("Scanner clear warning:", err.message);
-            }
             scannerRef.current = null;
           }
         }
@@ -152,7 +170,7 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
 
       stopScanner();
     };
-  }, [status, handleScanVerification]);
+  }, [status]);
 
   const handleBack = () => {
     if (onBackToMain) {
