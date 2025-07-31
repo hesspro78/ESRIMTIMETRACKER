@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Download, Settings as SettingsIconLucide, User, LogOut, Palette } from 'lucide-react';
+import { Download, Settings as SettingsIconLucide, User, LogOut, Palette, ArrowLeft } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { useAppSettings } from '@/contexts/AppSettingsContext';
 import { useAuth } from '@/hooks/useAuth.jsx';
@@ -19,7 +19,7 @@ import AdminSettingsTab from '@/components/admin/AdminSettingsTab';
 import AdminUICustomizationTab from '@/components/admin/AdminUICustomizationTab';
 import DataSyncStatus from '@/components/admin/DataSyncStatus';
 
-const AdminPanel = () => {
+const AdminPanel = ({ onBackToClocking }) => {
   const { appName, appLogo } = useAppSettings();
   const { userProfile, logout } = useAuth();
 
@@ -113,6 +113,15 @@ const AdminPanel = () => {
                 <span>Profil Admin</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-white/10"/>
+              {onBackToClocking && (
+                <>
+                  <DropdownMenuItem onClick={onBackToClocking} className="text-blue-400 focus:bg-blue-400/20 focus:text-blue-300">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    <span>Retour au Pointage</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-white/10"/>
+                </>
+              )}
               <DropdownMenuItem onClick={handleLogout} className="text-red-400 focus:bg-red-400/20 focus:text-red-300">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Déconnexion</span>

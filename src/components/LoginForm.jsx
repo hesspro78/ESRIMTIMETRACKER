@@ -6,10 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth.jsx';
 import { toast } from '@/components/ui/use-toast';
-import { LogIn, Clock, Users, BarChart3, QrCode } from 'lucide-react';
+import { LogIn, Clock, Users, BarChart3, QrCode, ArrowLeft } from 'lucide-react';
 import { useAppSettings } from '@/contexts/AppSettingsContext';
 
-const LoginForm = ({ onSwitchToQR }) => {
+const LoginForm = ({ onSwitchToQR, onBackToClocking }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -45,6 +45,18 @@ const LoginForm = ({ onSwitchToQR }) => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2070&auto=format&fit=crop')" }}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+      {/* Bouton retour vers l'interface de pointage */}
+      {onBackToClocking && (
+        <Button
+          onClick={onBackToClocking}
+          variant="ghost"
+          className="absolute top-4 left-4 text-white hover:bg-white/10"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Retour au Pointage
+        </Button>
+      )}
 
       <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-8 items-center relative z-10">
         <motion.div

@@ -6,6 +6,7 @@ import Dashboard from '@/components/Dashboard';
 import AdminPanel from '@/components/AdminPanel';
 import QRScannerPage from '@/components/QRScannerPage';
 import KioskLockScreen from '@/components/KioskLockScreen';
+import ClockingInterface from '@/components/ClockingInterface';
 import { AppSettingsProvider, useAppSettings } from '@/contexts/AppSettingsContext';
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 
@@ -13,7 +14,7 @@ const MainApp = () => {
   const { session, loading: authLoading, userProfile } = useAuth();
   const { appName, appLogo, loadInitialSettings, loadingSettings } = useAppSettings();
   const { applyCurrentTheme } = useTheme();
-  const [view, setView] = useState('login');
+  const [view, setView] = useState('main'); // 'main', 'clocking', 'admin', 'qr'
 
   useEffect(() => {
     document.title = appName;
@@ -48,18 +49,40 @@ const MainApp = () => {
     );
   }
 
-  if (!session) {
-    if (view === 'qr') {
-      return <QRScannerPage onBackToLogin={() => setView('login')} />;
-    }
-    return <LoginForm onSwitchToQR={() => setView('qr')} />;
+  // Interface principale de pointage - accessible sans authentification
+  if (view === 'main' || view === 'clocking') {
+    return (
+      <ClockingInterface
+        onAdminAccess={() => setView('admin')}
+      />
+    );
   }
 
-  if (userProfile && userProfile.role === 'admin') {
-    return <AdminPanel />;
+  // Vue admin - nécessite authentification
+  if (view === 'admin') {
+    if (!session) {
+      return <LoginForm onSwitchToQR={() => setView('qr')} onBackToClocking={() => setView('main')} />;
+    }
+
+    if (userProfile && userProfile.role === 'admin') {
+      return <AdminPanel onBackToClocking={() => setView('main')} />;
+    }
+
+    // Si utilisateur connecté mais pas admin, retour au dashboard
+    return <Dashboard onBackToClocking={() => setView('main')} />;
   }
-  
-  return <Dashboard />;
+
+  // Vue QR Scanner pour login (ancienne fonctionnalité)
+  if (view === 'qr') {
+    return <QRScannerPage onBackToLogin={() => setView('admin')} />;
+  }
+
+  // Vue par défaut
+  return (
+    <ClockingInterface
+      onAdminAccess={() => setView('admin')}
+    />
+  );
 };
 
 const AppContent = () => {

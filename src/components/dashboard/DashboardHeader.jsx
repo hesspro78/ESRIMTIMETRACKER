@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Bell, User, Settings as SettingsIconLucide, LogOut } from 'lucide-react';
+import { Bell, User, Settings as SettingsIconLucide, LogOut, ArrowLeft } from 'lucide-react';
 
 
 const DashboardHeader = ({
@@ -16,7 +16,8 @@ const DashboardHeader = ({
   unreadNotificationsCount,
   notifications,
   markAllNotificationsAsRead,
-  onLogout // Ce prop est toujours là, mais le toast est géré par useAuth
+  onLogout, // Ce prop est toujours là, mais le toast est géré par useAuth
+  onBackToClocking
 }) => {
 
   const handleLogoutClick = () => {
@@ -108,6 +109,15 @@ const DashboardHeader = ({
               <span>Paramètres</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/10"/>
+            {onBackToClocking && (
+              <>
+                <DropdownMenuItem onClick={onBackToClocking} className="text-blue-400 focus:bg-blue-400/20 focus:text-blue-300">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  <span>Retour au Pointage</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-white/10"/>
+              </>
+            )}
             <DropdownMenuItem onClick={handleLogoutClick} className="text-red-400 focus:bg-red-400/20 focus:text-red-300">
               <LogOut className="mr-2 h-4 w-4" />
               <span>Déconnexion</span>
