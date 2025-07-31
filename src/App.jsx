@@ -65,7 +65,7 @@ const MainApp = () => {
     }
 
     if (userProfile && userProfile.role === 'admin') {
-      return <AdminPanel onBackToClocking={() => setView('clocking')} />;
+      return <AdminPanel onBackToClocking={() => setView('main')} />;
     }
 
     // Si utilisateur connecté mais pas admin, retour au dashboard
