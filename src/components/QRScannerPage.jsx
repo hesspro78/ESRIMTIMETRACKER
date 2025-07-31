@@ -126,6 +126,8 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
 
         // Vérifier le support du navigateur
         const browserCheck = checkBrowserSupport();
+        console.log("Browser check:", browserCheck);
+
         if (!browserCheck.supported && mounted) {
           setStatus('error');
           setMessage(browserCheck.error);
@@ -133,22 +135,7 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
           return;
         }
 
-        // Vérifier les permissions avant d'initialiser
-        const permissionCheck = await checkCameraPermissions();
-        if (!permissionCheck.success && mounted) {
-          setStatus('error');
-          let errorMsg = "Accès à la caméra refusé.";
-
-          if (permissionCheck.error.name === 'NotAllowedError') {
-            errorMsg = "Accès à la caméra refusé. Autorisez l'accès et cliquez sur Réessayer.";
-          } else if (permissionCheck.error.name === 'NotFoundError') {
-            errorMsg = "Aucune caméra détectée sur cet appareil.";
-          }
-
-          setMessage(errorMsg);
-          setMessageStyle('text-red-500 font-semibold');
-          return;
-        }
+        console.log("Skipping permission check, trying direct scanner init...");
 
         if (!mounted) return;
 
@@ -189,7 +176,7 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
             let errorMsg = "Impossible d'activer la caméra.";
 
             if (err.name === 'NotAllowedError') {
-              errorMsg = "Accès à la caméra refus��. Autorisez l'accès et rechargez.";
+              errorMsg = "Accès à la caméra refusé. Autorisez l'accès et rechargez.";
             } else if (err.name === 'NotFoundError') {
               errorMsg = "Aucune caméra détectée sur cet appareil.";
             } else if (err.name === 'NotSupportedError') {
