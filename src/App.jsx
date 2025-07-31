@@ -6,6 +6,7 @@ import Dashboard from '@/components/Dashboard';
 import AdminPanel from '@/components/AdminPanel';
 import QRScannerPage from '@/components/QRScannerPage';
 import KioskLockScreen from '@/components/KioskLockScreen';
+import ClockingInterface from '@/components/ClockingInterface';
 import { AppSettingsProvider, useAppSettings } from '@/contexts/AppSettingsContext';
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 
