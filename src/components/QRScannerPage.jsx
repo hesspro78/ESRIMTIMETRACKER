@@ -7,11 +7,12 @@ import { QrCode, X, CheckCircle, LogIn, LogOut, ArrowLeft, Loader2 } from 'lucid
 import { toast } from '@/components/ui/use-toast';
 import { playClockInSound, playClockOutSound } from '@/lib/audioUtils';
 
-const QRScannerPage = ({ onBackToLogin }) => {
+const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
   const [status, setStatus] = useState('scanning'); // scanning, verifying, success, error
   const [message, setMessage] = useState('Veuillez scanner votre QR Code');
   const [messageStyle, setMessageStyle] = useState('text-muted-foreground');
   const [actionType, setActionType] = useState(''); // 'in' or 'out'
+  const [userInfo, setUserInfo] = useState(null);
   const scannerRef = useRef(null);
 
   const resetScanner = useCallback(() => {
