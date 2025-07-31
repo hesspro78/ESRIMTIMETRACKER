@@ -49,18 +49,35 @@ const MainApp = () => {
     );
   }
 
-  if (!session) {
-    if (view === 'qr') {
-      return <QRScannerPage onBackToLogin={() => setView('login')} />;
-    }
-    return <LoginForm onSwitchToQR={() => setView('qr')} />;
+  // Interface principale de pointage - accessible sans authentification
+  if (view === 'clocking') {
+    return (
+      <ClockingInterface
+        onAdminAccess={() => setView('admin')}
+      />
+    );
   }
 
-  if (userProfile && userProfile.role === 'admin') {
-    return <AdminPanel />;
+  // Vue admin - nécessite authentification
+  if (view === 'admin') {
+    if (!session) {
+      return <LoginForm onSwitchToQR={() => setView('qr')} onBackToClocking={() => setView('clocking')} />;
+    }
+
+    if (userProfile && userProfile.role === 'admin') {
+      return <AdminPanel onBackToClocking={() => setView('clocking')} />;
+    }
+
+    // Si utilisateur connecté mais pas admin, retour au dashboard
+    return <Dashboard onBackToClocking={() => setView('clocking')} />;
   }
-  
-  return <Dashboard />;
+
+  // Vue QR Scanner pour login (ancienne fonctionnalité)
+  if (view === 'qr') {
+    return <QRScannerPage onBackToLogin={() => setView('admin')} />;
+  }
+
+  return <ClockingInterface onAdminAccess={() => setView('admin')} />;
 };
 
 const AppContent = () => {
