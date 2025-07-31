@@ -89,7 +89,7 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
       }
 
       if (!window.location.protocol.includes('https') && window.location.hostname !== 'localhost') {
-        return { supported: false, error: "L'accès à la caméra nécessite une connexion HTTPS." };
+        return { supported: false, error: "L'acc��s à la caméra nécessite une connexion HTTPS." };
       }
 
       return { supported: true };
@@ -140,23 +140,27 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
         if (!mounted) return;
 
         try {
+          console.log("Creating Html5Qrcode instance...");
           html5Qrcode = new Html5Qrcode('qr-reader');
           scannerRef.current = html5Qrcode;
 
+          console.log("Html5Qrcode instance created, starting camera...");
+
           const onScanSuccess = (decodedText) => {
+            console.log("QR scanned:", decodedText);
             if (mounted && status === 'scanning' && scannerRef.current) {
               handleScanVerification(decodedText);
             }
           };
 
-          // Configuration simplifiée et robuste
+          // Configuration la plus simple possible
           const cameraConfig = { facingMode: "environment" };
           const scannerConfig = {
-            fps: 5, // FPS très bas pour éviter la surcharge
-            qrbox: { width: 250, height: 250 },
-            aspectRatio: 1.0,
-            disableFlip: false
+            fps: 10,
+            qrbox: 250
           };
+
+          console.log("Starting scanner with config:", { cameraConfig, scannerConfig });
 
           await html5Qrcode.start(
             cameraConfig,
@@ -167,7 +171,7 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
             }
           );
 
-          console.log("Scanner started successfully");
+          console.log("✅ Scanner started successfully!");
 
         } catch (err) {
           console.error("Scanner initialization failed:", err);
