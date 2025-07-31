@@ -61,7 +61,7 @@ const MainApp = () => {
   // Vue admin - nécessite authentification
   if (view === 'admin') {
     if (!session) {
-      return <LoginForm onSwitchToQR={() => setView('qr')} onBackToClocking={() => setView('clocking')} />;
+      return <LoginForm onSwitchToQR={() => setView('qr')} onBackToClocking={() => setView('main')} />;
     }
 
     if (userProfile && userProfile.role === 'admin') {
