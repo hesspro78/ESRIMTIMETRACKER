@@ -75,38 +75,62 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
 
   useEffect(() => {
     let html5Qrcode;
-    if (status === 'scanning' && !scannerRef.current) {
-      html5Qrcode = new Html5Qrcode('qr-reader');
-      scannerRef.current = html5Qrcode;
-      
-      const onScanSuccess = (decodedText) => {
-        if (status === 'scanning') {
-          handleScanVerification(decodedText);
+
+    const startScanner = async () => {
+      if (status === 'scanning' && !scannerRef.current) {
+        try {
+          html5Qrcode = new Html5Qrcode('qr-reader');
+          scannerRef.current = html5Qrcode;
+
+          const onScanSuccess = (decodedText) => {
+            if (status === 'scanning' && scannerRef.current) {
+              handleScanVerification(decodedText);
+            }
+          };
+
+          await html5Qrcode.start(
+            { facingMode: "environment" },
+            { fps: 25, qrbox: { width: 250, height: 250 }, rememberLastUsedCamera: true, supportedScanTypes: [0] },
+            onScanSuccess,
+            (errorMessage) => {}
+          );
+        } catch (err) {
+          console.error("Unable to start scanner", err);
+          setStatus('error');
+          setMessage("Impossible d'activer la caméra.");
+          toast({
+            title: "Erreur de caméra",
+            description: "Vérifiez que vous avez autorisé l'accès à la caméra.",
+            variant: "destructive"
+          });
+          scannerRef.current = null;
         }
-      };
-      
-      html5Qrcode.start(
-        { facingMode: "environment" }, 
-        { fps: 25, qrbox: { width: 250, height: 250 }, rememberLastUsedCamera: true, supportedScanTypes: [0] },
-        onScanSuccess,
-        (errorMessage) => {}
-      ).catch(err => {
-        console.error("Unable to start scanner", err);
-        setStatus('error');
-        setMessage("Impossible d'activer la caméra.");
-        toast({
-          title: "Erreur de caméra",
-          description: "Vérifiez que vous avez autorisé l'accès à la caméra.",
-          variant: "destructive"
-        });
-      });
-    }
+      }
+    };
+
+    startScanner();
 
     return () => {
-      if (scannerRef.current && scannerRef.current.isScanning) {
-        scannerRef.current.stop().catch(err => console.error("Failed to stop scanner", err));
-        scannerRef.current = null;
-      }
+      const stopScanner = async () => {
+        if (scannerRef.current) {
+          try {
+            if (scannerRef.current.getState() === 2) { // State 2 means scanning
+              await scannerRef.current.stop();
+            }
+          } catch (err) {
+            console.warn("Scanner cleanup warning:", err.message);
+          } finally {
+            try {
+              scannerRef.current.clear();
+            } catch (err) {
+              console.warn("Scanner clear warning:", err.message);
+            }
+            scannerRef.current = null;
+          }
+        }
+      };
+
+      stopScanner();
     };
   }, [status, handleScanVerification]);
 
