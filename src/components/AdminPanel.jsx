@@ -19,7 +19,7 @@ import AdminSettingsTab from '@/components/admin/AdminSettingsTab';
 import AdminUICustomizationTab from '@/components/admin/AdminUICustomizationTab';
 import DataSyncStatus from '@/components/admin/DataSyncStatus';
 
-const AdminPanel = () => {
+const AdminPanel = ({ onBackToClocking }) => {
   const { appName, appLogo } = useAppSettings();
   const { userProfile, logout } = useAuth();
 
