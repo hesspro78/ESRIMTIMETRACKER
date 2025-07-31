@@ -75,23 +75,24 @@ const ClockingInterface = ({ onAdminAccess }) => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Background animated elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
-      </div>
-
-      {/* Bouton admin discret en bas à droite */}
+    <>
+      {/* Bouton admin discret en bas à droite de l'écran */}
       <Button
         variant="ghost"
         size="sm"
         onClick={onAdminAccess}
-        className="absolute bottom-4 right-4 opacity-20 hover:opacity-100 transition-opacity text-white/50 hover:text-white p-2"
+        className="fixed bottom-6 right-6 z-50 opacity-10 hover:opacity-100 transition-all duration-300 text-white/30 hover:text-white p-2 hover:bg-white/10 rounded-lg"
       >
         <Settings className="h-4 w-4" />
       </Button>
+
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        {/* Background animated elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+        </div>
 
       <div className="relative z-10 w-full max-w-md">
         {/* Logo et titre */}
@@ -265,6 +266,7 @@ const ClockingInterface = ({ onAdminAccess }) => {
         </AnimatePresence>
       </div>
     </div>
+    </>
   );
 };
 
