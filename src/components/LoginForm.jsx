@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth.jsx';
 import { toast } from '@/components/ui/use-toast';
-import { LogIn, Clock, Users, BarChart3, QrCode } from 'lucide-react';
+import { LogIn, Clock, Users, BarChart3, QrCode, ArrowLeft } from 'lucide-react';
 import { useAppSettings } from '@/contexts/AppSettingsContext';
 
 const LoginForm = ({ onSwitchToQR, onBackToClocking }) => {
