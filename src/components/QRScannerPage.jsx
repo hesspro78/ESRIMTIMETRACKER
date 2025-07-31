@@ -15,22 +15,10 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
   const [userInfo, setUserInfo] = useState(null);
   const scannerRef = useRef(null);
 
-  const resetScanner = useCallback(async () => {
-    // Nettoyer le scanner existant avant de réinitialiser
-    if (scannerRef.current) {
-      try {
-        if (scannerRef.current.getState() === 2) {
-          await scannerRef.current.stop();
-        }
-        scannerRef.current.clear();
-      } catch (err) {
-        console.warn("Reset scanner cleanup warning:", err.message);
-      } finally {
-        scannerRef.current = null;
-      }
-    }
-
+  const resetScanner = useCallback(() => {
+    // Réinitialiser seulement l'état, le scanner sera recréé par l'useEffect
     setActionType('');
+    setUserInfo(null);
     setStatus('scanning');
     setMessage('Veuillez scanner votre QR Code');
     setMessageStyle('text-muted-foreground');
