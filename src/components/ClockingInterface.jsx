@@ -137,7 +137,10 @@ const ClockingInterface = ({ onAdminAccess }) => {
                 className="mb-8"
               >
                 <Button
-                  onClick={() => setView('scanner')}
+                  onClick={() => {
+                    console.log("🚀 Navigating to scanner...");
+                    setView('scanner');
+                  }}
                   className="relative w-full h-32 text-xl font-bold overflow-hidden bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 hover:from-purple-500 hover:via-blue-500 hover:to-cyan-400 border-0 shadow-2xl group"
                   size="lg"
                 >
