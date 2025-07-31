@@ -120,11 +120,28 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
           return;
         }
 
-        // Vérifier les permissions avant d'initialiser
-        const hasPermissions = await checkCameraPermissions();
-        if (!hasPermissions && mounted) {
+        // Vérifier le support du navigateur
+        const browserCheck = checkBrowserSupport();
+        if (!browserCheck.supported && mounted) {
           setStatus('error');
-          setMessage("Accès à la caméra refusé. Veuillez autoriser l'accès dans votre navigateur.");
+          setMessage(browserCheck.error);
+          setMessageStyle('text-red-500 font-semibold');
+          return;
+        }
+
+        // Vérifier les permissions avant d'initialiser
+        const permissionCheck = await checkCameraPermissions();
+        if (!permissionCheck.success && mounted) {
+          setStatus('error');
+          let errorMsg = "Accès à la caméra refusé.";
+
+          if (permissionCheck.error.name === 'NotAllowedError') {
+            errorMsg = "Accès à la caméra refusé. Autorisez l'accès et cliquez sur Réessayer.";
+          } else if (permissionCheck.error.name === 'NotFoundError') {
+            errorMsg = "Aucune caméra détectée sur cet appareil.";
+          }
+
+          setMessage(errorMsg);
           setMessageStyle('text-red-500 font-semibold');
           return;
         }
@@ -170,7 +187,7 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
             if (err.name === 'NotAllowedError') {
               errorMsg = "Accès à la caméra refusé. Autorisez l'accès et rechargez.";
             } else if (err.name === 'NotFoundError') {
-              errorMsg = "Aucune caméra détectée sur cet appareil.";
+              errorMsg = "Aucune caméra détect��e sur cet appareil.";
             } else if (err.name === 'NotSupportedError') {
               errorMsg = "Caméra non supportée par ce navigateur.";
             }
