@@ -113,16 +113,34 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
       console.log("startScanner called", { status, scannerRef: !!scannerRef.current, mounted });
 
       if (status === 'scanning' && !scannerRef.current && mounted) {
-        // Attendre que l'élément DOM soit prêt
-        await new Promise(resolve => setTimeout(resolve, 200));
+        console.log("Waiting for DOM element...");
 
-        const readerElement = document.getElementById('qr-reader');
-        console.log("QR reader element:", readerElement);
+        // Attendre que l'élément DOM soit prêt avec retry
+        let readerElement = null;
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        while (!readerElement && attempts < maxAttempts && mounted) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          readerElement = document.getElementById('qr-reader');
+          attempts++;
+          console.log(`Attempt ${attempts}: Element found:`, !!readerElement);
+        }
 
         if (!readerElement || !mounted) {
-          console.warn("Element not ready or component unmounted", { readerElement: !!readerElement, mounted });
+          console.error("QR reader element not found after retries", {
+            element: !!readerElement,
+            mounted,
+            attempts,
+            allElements: document.querySelectorAll('[id*="qr"]').length
+          });
+          setStatus('error');
+          setMessage("Erreur d'initialisation du scanner.");
+          setMessageStyle('text-red-500 font-semibold');
           return;
         }
+
+        console.log("✅ QR reader element found:", readerElement);
 
         // Vérifier le support du navigateur
         const browserCheck = checkBrowserSupport();
