@@ -9,7 +9,7 @@ import { toast } from '@/components/ui/use-toast';
 import { LogIn, Clock, Users, BarChart3, QrCode } from 'lucide-react';
 import { useAppSettings } from '@/contexts/AppSettingsContext';
 
-const LoginForm = ({ onSwitchToQR }) => {
+const LoginForm = ({ onSwitchToQR, onBackToClocking }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
