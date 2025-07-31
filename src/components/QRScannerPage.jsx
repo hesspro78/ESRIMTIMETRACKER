@@ -83,20 +83,29 @@ const QRScannerPage = ({ onBackToLogin, onBackToMain, onScanSuccess }) => {
     let html5Qrcode;
     let mounted = true;
 
+    const checkBrowserSupport = () => {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        return { supported: false, error: "Ce navigateur ne supporte pas l'accès à la caméra." };
+      }
+
+      if (!window.location.protocol.includes('https') && window.location.hostname !== 'localhost') {
+        return { supported: false, error: "L'accès à la caméra nécessite une connexion HTTPS." };
+      }
+
+      return { supported: true };
+    };
+
     const checkCameraPermissions = async () => {
       try {
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "environment" }
-          });
-          // Fermer immédiatement le stream de test
-          stream.getTracks().forEach(track => track.stop());
-          return true;
-        }
-        return false;
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" }
+        });
+        // Fermer immédiatement le stream de test
+        stream.getTracks().forEach(track => track.stop());
+        return { success: true };
       } catch (err) {
         console.warn("Permissions check failed:", err);
-        return false;
+        return { success: false, error: err };
       }
     };
 
