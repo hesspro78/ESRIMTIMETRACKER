@@ -40,6 +40,14 @@ const ClockingInterface = ({ onAdminAccess }) => {
     return () => clearTimeout(timer);
   }, [adminKeySequence]);
 
+  // Mise à jour de l'horloge en temps réel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   const handleScanSuccess = (userInfo, actionType) => {
     setView('main');
     setConfirmation({
